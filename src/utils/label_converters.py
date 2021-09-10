@@ -7,7 +7,6 @@ def label_to_int(string_label):
     else:
         raise Exception('unkown class_label')
 
-
 def int_to_label(string_label):
     if string_label == 1: return '5-point-star'
     if string_label == 2: return 'rectangle'
