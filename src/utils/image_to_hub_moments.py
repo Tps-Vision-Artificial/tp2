@@ -50,7 +50,7 @@ def get_hub_moments(file):
     denoised_image = denoise(frame=threshold_image, method=cv2.MORPH_ELLIPSE, radius=5)
     countours = get_contours(frame=denoised_image, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_NONE)
 
-    moments = cv2.moments(countours[0])  # momentos de inercia
+    moments = cv2.moments(countours[1])  # momentos de inercia
     # Calculate Hu Moments
     huMoments = cv2.HuMoments(moments)  # momentos de Hu
 
