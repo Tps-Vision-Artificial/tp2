@@ -25,16 +25,17 @@ import csv
 #         writer.writerow(row)
 
 def read_supervision():
-    descriptores = []
+    descriptors = []
     with open('../dataset/supervision.csv') as file:
         reader = csv.reader(file)
         for row in reader:
-            element = [row[0], get_hub_moments('../dataset/imagenes/'+row[0])]
-            descriptores.append(element)
+            hu_moments = [get_hub_moments('../dataset/imagenes/' + row[0] + '.png')]
+            element = [row[0], hu_moments]
+            descriptors.append(element)
 
     with open('../dataset/descriptores.csv','w', newline='') as file:
         writer = csv.writer(file,delimiter =',')
-        writer.writerows(descriptores)
+        writer.writerows(descriptors)
 
 def get_hub_moments(file):
      image = cv2.imread(file)
