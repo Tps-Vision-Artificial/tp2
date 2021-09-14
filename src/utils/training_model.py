@@ -2,10 +2,10 @@ import cv2 as cv
 import numpy as np
 import csv
 
-from src.utils.label_converters import label_to_int
 
-train_data = []
-train_label = []
+trainData = []
+trainLabels = []
+
 
 def load_training_set():
     global trainData
@@ -13,15 +13,19 @@ def load_training_set():
     with open('generated-files/shapes-hu-moments.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
-            class_label = row.pop() # saca el ultimo elemento de la lista
+            class_label = row.pop(0)  # saca el primer elemento de la lista
             floats = []
             for n in row:
-                floats.append(float(n)) # tiene los momentos de Hu transformados a float.
-            trainData.append(np.array(floats, dtype=np.float32)) # momentos de Hu
-            trainLabels.append(np.array([label_to_int(class_label)], dtype=np.int32)) # Resultados
-            #Valores y resultados se necesitan por separados
+                floats.append(float(n))  # tiene los momentos de Hu transformados a float.
+            trainData.append(np.array(floats, dtype=np.float32))  # momentos de Hu
+            trainLabels.append(np.array([float(class_label)], dtype=np.int32))  # Resultados
+            # Valores y resultados se necesitan por separados
     trainData = np.array(trainData, dtype=np.float32)
     trainLabels = np.array(trainLabels, dtype=np.int32)
+    print(trainData)
+    print(trainLabels)
+
+
 # transforma los arrays a arrays de forma numpy
 
 
@@ -30,7 +34,9 @@ def train_model():
     load_training_set()
 
     tree = cv.ml.DTrees_create()
+    # load por creat, le paso el path
     tree.setCVFolds(1)
     tree.setMaxDepth(10)
     tree.train(trainData, cv.ml.ROW_SAMPLE, trainLabels)
+    tree.save('./generated-files/trained.yml')
     return tree

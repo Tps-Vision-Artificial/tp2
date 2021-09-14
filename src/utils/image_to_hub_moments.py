@@ -33,7 +33,6 @@ def read_supervision():
         for row in reader:
             print(row[0])
 
-read_supervision()
 # def get_hub_moments(file):
 #     image = cv.imread(file)
 #     gray = apply_color_convertion(frame=image, color=cv.COLOR_BGR2GRAY)

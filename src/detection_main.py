@@ -1,4 +1,9 @@
 import cv2 as cv
+import numpy as np
+from utils.label_converters import int_to_label
+from utils.hu_moments_generation import hu_moments_of_file2
+
+from utils.label_converters import read_tags
 
 
 def main():
@@ -14,12 +19,13 @@ def main():
     biggest_contour = None
     font = cv.FONT_HERSHEY_SIMPLEX
     i = 1
+    read_tags()
 
     create_trackbar(threshold_trackbar_name, window_name, slider_max)
     create_trackbar(radius_trackbar_name, window_name, 30)
     create_trackbar(difference_trackbar_name, window_name, 100)
 
-    saved_contours = {}
+    # saved_contours = {}
     while True:
         ret, frame = cap.read()
         frame = cv.flip(frame, 1)
@@ -41,13 +47,15 @@ def main():
         final_frame = apply_color_convertion(frame=frame_denoised, color=cv.COLOR_GRAY2BGR)
         final_frame_color = frame
 
+            # if bool(saved_contours) and compare_contours(contour_to_compare=biggest_contour, saved_contours=saved_contours.values(), max_diff=max_diff):
         if len(contours) > 0:
-            biggest_contour = get_biggest_contour(contours=contours)
+            biggest_contour = [get_biggest_contour(contours=contours)]
+            # read_train(saved_contours=biggest_contour)
             # diff trackbar
             max_diff = get_percentage(trackbar_name=difference_trackbar_name, window_name=window_name)
-            if bool(saved_contours) and compare_contours(contour_to_compare=biggest_contour, saved_contours=saved_contours.values(), max_diff=max_diff):
+            if bool(biggest_contour):
                 draw_contours(frame=final_frame_color, contours=biggest_contour, color=(0, 255, 0), thickness=20)
-                key_of_matched_shape = get_key(biggest_contour=biggest_contour, saved_contours=saved_contours, max_diff=max_diff)
+                key_of_matched_shape = read_train(biggest_contour)
                 show_text(final_frame_color, key_of_matched_shape, font)
             else:
                 draw_contours(frame=final_frame_color, contours=biggest_contour, color=(0, 0, 255), thickness=3)
@@ -57,11 +65,11 @@ def main():
         cv.imshow('Denoised', frame_denoised)
         cv.imshow('Window', final_frame_color)
 
-        if cv.waitKey(1) & 0xFF == ord('k'):
-            if biggest_contour is not None:
-                # usar un dict (el HashMap de Python) para poder ponerle un nombre
-                saved_contours['Object number ' + str(i)] = biggest_contour
-                i = i + 1
+        # if cv.waitKey(1) & 0xFF == ord('k'):
+        #     if biggest_contour is not None:
+        #         # usar un dict (el HashMap de Python) para poder ponerle un nombre
+        #         saved_contours['Object number ' + str(i)] = biggest_contour
+        #         i = i + 1
 
         if cv.waitKey(1) & 0xFF == ord('q'):
             break
@@ -91,10 +99,8 @@ def denoise(frame, method, radius):
     return closing
 
 
-def get_key(biggest_contour, saved_contours, max_diff):
-    for key, value in saved_contours.items():
-        if cv.matchShapes(biggest_contour, value, cv.CONTOURS_MATCH_I2, 0) < max_diff:
-            return key
+def get_key(biggest_contour):
+
     return "key doesn't exist"
 
 
@@ -135,6 +141,16 @@ def compare_contours(contour_to_compare, saved_contours, max_diff):
 
 def show_text(final_frame, key_of_matched_shape, font):
     cv.putText(final_frame, key_of_matched_shape, (200, 70), font, 1, (50, 255, 0), 2, cv.LINE_AA)
+
+
+def read_train(saved_contours):
+    model = cv.ml.DTrees_load('generated-files/trained.yml')
+    for contour in saved_contours:
+        hu_moments = hu_moments_of_file2(contour)  # Genera los momentos de hu de un contour
+        sample = np.array([hu_moments], dtype=np.float32)
+        testResponse = model.predict(sample)[0]
+        result = int_to_label(testResponse)
+        return result
 
 
 main()
