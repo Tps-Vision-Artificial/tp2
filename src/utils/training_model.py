@@ -34,8 +34,9 @@ def train_model():
     load_training_set()
 
     tree = cv.ml.DTrees_create()
-    # load por creat, le paso el path
     tree.setCVFolds(1)
+    # depth => number of decisions to take
+    # try to decrease depth. maybe works better
     tree.setMaxDepth(10)
     tree.train(trainData, cv.ml.ROW_SAMPLE, trainLabels)
     tree.save('./generated-files/trained.yml')

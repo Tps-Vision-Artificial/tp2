@@ -1,0 +1,71 @@
+%YAML:1.0
+---
+opencv_ml_dtree:
+   format: 3
+   is_classifier: 1
+   var_all: 8
+   var_count: 7
+   ord_var_count: 7
+   cat_var_count: 1
+   training_params:
+      use_surrogates: 0
+      max_categories: 10
+      regression_accuracy: 9.9999997764825821e-03
+      max_depth: 10
+      min_sample_count: 10
+      cross_validation_folds: 0
+   global_var_idx: 1
+   var_idx: [ 0, 1, 2, 3, 4, 5, 6 ]
+   var_type: [ 0, 0, 0, 0, 0, 0, 0, 1 ]
+   cat_ofs: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+   class_labels: [ 0, 1, 2 ]
+   missing_subst: [ 0., 0., 0., 0., 0., 0., 0., 0. ]
+   nodes:
+      -
+         depth: 0
+         value: 0.
+         norm_class_idx: 0
+         splits:
+            - { var:3, quality:1.6342857360839844e+01,
+                le:5.4459867477416992e+00 }
+      -
+         depth: 1
+         value: 2.
+         norm_class_idx: 2
+         splits:
+            - { var:2, quality:1.0399999618530273e+01,
+                le:2.3323712348937988e+00 }
+      -
+         depth: 2
+         value: 1.
+         norm_class_idx: 1
+      -
+         depth: 2
+         value: 2.
+         norm_class_idx: 2
+      -
+         depth: 1
+         value: 0.
+         norm_class_idx: 0
+         splits:
+            - { var:4, quality:1.3127272605895996e+01,
+                le:-9.7666931152343750e+00 }
+      -
+         depth: 2
+         value: 0.
+         norm_class_idx: 0
+         splits:
+            - { var:6, quality:9.6666669845581055e+00,
+                le:-1.1285609245300293e+01 }
+      -
+         depth: 3
+         value: 1.
+         norm_class_idx: 1
+      -
+         depth: 3
+         value: 0.
+         norm_class_idx: 0
+      -
+         depth: 2
+         value: 1.
+         norm_class_idx: 1

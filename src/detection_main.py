@@ -47,14 +47,15 @@ def main():
         final_frame = apply_color_convertion(frame=frame_denoised, color=cv.COLOR_GRAY2BGR)
         final_frame_color = frame
 
-            # if bool(saved_contours) and compare_contours(contour_to_compare=biggest_contour, saved_contours=saved_contours.values(), max_diff=max_diff):
+        # if bool(saved_contours) and compare_contours(contour_to_compare=biggest_contour, saved_contours=saved_contours.values(), max_diff=max_diff):
+
         if len(contours) > 0:
             biggest_contour = [get_biggest_contour(contours=contours)]
             # read_train(saved_contours=biggest_contour)
             # diff trackbar
             max_diff = get_percentage(trackbar_name=difference_trackbar_name, window_name=window_name)
             if bool(biggest_contour):
-                draw_contours(frame=final_frame_color, contours=biggest_contour, color=(0, 255, 0), thickness=20)
+                draw_contours(frame=final_frame_color, contours=biggest_contour, color=(0, 255, 0), thickness=10)
                 key_of_matched_shape = read_train(biggest_contour)
                 show_text(final_frame_color, key_of_matched_shape, font)
             else:
@@ -77,7 +78,7 @@ def main():
 
 
 def create_trackbar(trackbar_name, window_name, slider_max):
-    cv.createTrackbar(trackbar_name, window_name, 0, slider_max, on_trackbar)
+    cv.createTrackbar(trackbar_name, window_name, int(slider_max/2), slider_max, on_trackbar)
 
 
 def on_trackbar(val):
@@ -97,11 +98,6 @@ def denoise(frame, method, radius):
     opening = cv.morphologyEx(frame, cv.MORPH_OPEN, kernel)
     closing = cv.morphologyEx(opening, cv.MORPH_CLOSE, kernel)
     return closing
-
-
-def get_key(biggest_contour):
-
-    return "key doesn't exist"
 
 
 def apply_color_convertion(frame, color):
@@ -132,11 +128,11 @@ def get_biggest_contour(contours):
     return max_cnt
 
 
-def compare_contours(contour_to_compare, saved_contours, max_diff):
-    for contour in saved_contours:
-        if cv.matchShapes(contour_to_compare, contour, cv.CONTOURS_MATCH_I2, 0) < max_diff:
-            return True
-    return False
+# def compare_contours(contour_to_compare, saved_contours, max_diff):
+#     for contour in saved_contours:
+#         if cv.matchShapes(contour_to_compare, contour, cv.CONTOURS_MATCH_I2, 0) < max_diff:
+#             return True
+#     return False
 
 
 def show_text(final_frame, key_of_matched_shape, font):

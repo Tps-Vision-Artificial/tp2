@@ -33,6 +33,8 @@ def read_tags():
 
 
 def int_to_label(int_value):
+    # if int_value != 0 or int_value != 1 or int_value != 2:
+    #     return 'Not recognised'
     with open('./dataset/tags.csv') as file:
         reader = csv.reader(file)
         for row in reader:
@@ -40,3 +42,5 @@ def int_to_label(int_value):
                 row[0] = 0
             if int(row[0]) == int_value:
                 return row[1]
+            # else:
+            #     return "not recognised"
